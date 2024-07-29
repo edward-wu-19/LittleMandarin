@@ -65,7 +65,7 @@ function DraggableNodes(props){
         return <g>
         {
           data.map( d => {
-            var nodeRef = React.useRef(null);
+            var nodeRef = React.useRef({});
             var controlledPosition = {x: 0, y: 0};
 
             var coords = determineCoordinates(d.index);

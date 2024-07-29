@@ -23,7 +23,7 @@ function useRelationsData(csvPath){
             });
             setData(data);
         });
-    }, []);
+    }, [csvPath]);
     return dataAll;
 }
 
