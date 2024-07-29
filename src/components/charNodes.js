@@ -1,106 +1,108 @@
 import React from "react";
+import Draggable from 'react-draggable';
 import { min, max } from 'd3';
-import styles from "../styles/main-style.module.css";
+import styles from "../styles/styles.module.css";
 
-function determineCoordinates(feature){
-    // return the coordinates that the node should be placed
+const radius = 14;
+const offsetX = radius / 2 + 1;
+const offsetY = radius / 2 - 1;
 
-    // one neighborhood can have multiple elements in the coordinates array, denoting several, disconnected regions
+function determineCoordinates(index){
+    // used to put the characters into a grid like array
+    const margin = 60;
+    const sep = 50;
+    const elements_per_row = 6;
 
-    let minX, minY, maxX, maxY;
+    // everything, including rows and columns, is zero-indexed
+    const row_number = Math.floor(index / elements_per_row);
+    const column_number = index % elements_per_row;
     
-    if (feature.geometry.type == 'MultiPolygon'){
-        minX = min(feature.geometry.coordinates, zone => zone[0].reduce(
-                (point1, point2) => {return point1[0] < point2[0] ? point1 : point2})[0]);
-        maxX = max(feature.geometry.coordinates, zone => zone[0].reduce(
-            (point1, point2) => {return point1[0] > point2[0] ? point1 : point2})[0]);
+    const x = margin + column_number * sep;
+    const y = margin + row_number * sep;
 
-        minY = min(feature.geometry.coordinates, zone => zone[0].reduce(
-            (point1, point2) => {return point1[1] < point2[1] ? point1 : point2})[1]);
-        maxY = max(feature.geometry.coordinates, zone => zone[0].reduce(
-            (point1, point2) => {return point1[1] > point2[1] ? point1 : point2})[1]);
-    }
-    else{
-        minX = feature.geometry.coordinates[0].reduce(
-            (point1, point2) => {return point1[0] < point2[0] ? point1 : point2})[0];
-        maxX = feature.geometry.coordinates[0].reduce(
-            (point1, point2) => {return point1[0] > point2[0] ? point1 : point2})[0];
-
-        minY = feature.geometry.coordinates[0].reduce(
-            (point1, point2) => {return point1[1] < point2[1] ? point1 : point2})[1];
-        maxY = feature.geometry.coordinates[0].reduce(
-            (point1, point2) => {return point1[1] > point2[1] ? point1 : point2})[1];
-    }
-   
-    // return averages
-    let avgX = (minX + maxX) / 2;
-    let avgY = (minY + maxY) / 2;
-
-    return [avgX, avgY];
+    return [x, y];
 }
 
-function Nodes(props){
-    const {projection, map, data, colorScale, selectedYear, selectedPollutant, selectedNeighborhood, onHover, onOut} = props;
+function StaticNodes(props){
+  const {data} = props;
 
-    const getRadius = d => d === selectedNeighborhood ? 12:8;
-    // const getStroke = d => d === selectedNeighborhood ? 'black':'black';
-    const getStrokeWidth = d => d === selectedNeighborhood ? '2px':'1px';
+  if(data){
+      return <g>
+      {
+          data.map( d => {
+            var coords = determineCoordinates(d.index);
+            var cx = coords[0];
+            var cy = coords[1];
+        
+            return <g key={d.index+"-group-fixed"}>
+              <circle key={d.index+"-fixed"}
+                r={radius}
+                stroke={'black'}
+                strokeWidth={'2px'}
+                fill={"white"}
+                cx={cx}
+                cy={cy}
+              />
+
+              <text key={d.index+"-text-fixed"}
+              x={cx-offsetX} y={cy+offsetY}>
+                  {`${d.Result}`}
+              </text>
+
+            </g>
+            }
+          )}
+          </g>
+  } else {
+      return <g></g>
+  }
+}
+
+function DraggableNodes(props){
+    const {data} = props;
 
     if(data){
-        
-        // we need to calculate where to put each neighborhood's node
-        var coords = {};
-        for (var i = 0; i < map.features.length-1; i++){
-            var feature = map.features[i];
-
-            coords[feature.properties.GEOCODE] = determineCoordinates(feature);
-        }
-
-        // choose what data to display on the map
-        let selectedRows = data.filter(d => d.Year == selectedYear && d.Name == selectedPollutant);
-
-        // determine the right color, in hsl format
-        var hue, sat;
-        if (selectedPollutant == 'Ozone'){
-            hue = '0';
-            sat = "100%";
-        }
-        else if (selectedPollutant == 'Nitrogen Dioxide'){
-            hue = '240';
-            sat = "100%";
-        }
-        else if (selectedPollutant == 'Fine Particles'){
-            hue = '0';
-            sat = "0%";
-        }
-
-        // console.log(hue, sat);
-
-        // plot nodes
         return <g>
-            {
-                selectedRows.map( d => {
-                var color = "hsl(" + hue + ',' + sat + "," + Math.round(colorScale(d.Value)) + "%)";
-                {/* console.log(color); */}
-            
-                return <circle key={d.Neighborhood}
-                    r={`${getRadius(d.Neighborhood)}`}
-                    stroke={'black'}
-                    strokeWidth={`${getStrokeWidth(d.Neighborhood)}`}
-                    fill={color}
-                    cx={projection(coords[d.Neighborhood])[0]}
-                    cy={projection(coords[d.Neighborhood])[1]}
-                    onMouseOver={() => onHover(d.Neighborhood)}
-                    onMouseOut={() => onOut()}
-                    ></circle>
-                    }
-                )}
+        {
+          data.map( d => {
+            var nodeRef = React.useRef(null);
+            var controlledPosition = {x: 0, y: 0};
+
+            var coords = determineCoordinates(d.index);
+            var cx = coords[0];
+            var cy = coords[1];
+        
+            return <g key={d.index+"-group-drag"}>
+              <Draggable
+              position={controlledPosition}
+              nodeRef={nodeRef} // this line solves the findDOMNode warning
+              >
+                <g ref={nodeRef}>
+                <circle key={d.index+"-drag"}
+                  r={radius}
+                  stroke={'black'}
+                  strokeWidth={'2px'}
+                  fill={"white"}
+                  cx={cx}
+                  cy={cy}
+                  opacity={0.5}
+                />
+
+                <text
+                key={d.index+"-text-drag"}
+                x={cx-offsetX} 
+                y={cy+offsetY}>
+                    {`${d.Result}`}
+                </text>
+                </g>
+              </Draggable>
+            </g>
+              }
+          )}
         </g>
     } else {
-        return <g>
-
-        </g>
+        return <g></g>
     }
 }
 
-export { Nodes }
+export { StaticNodes, DraggableNodes }

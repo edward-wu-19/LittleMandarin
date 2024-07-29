@@ -2,22 +2,34 @@
 
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.css';
-import { jquery } from "jquery-csv";
-// import { csv, json } from "d3";
-
+import { csv, json, local } from "d3";
 import { Row, Col, Container } from "react-bootstrap";
 
-// import {  } from "../components/utils";
+import { CharacterArray } from "../components/characterArray";
+import { BasicStrokes } from "../components/basicStrokes";
+import { MenuBar } from "../components/menuBar";
+import { HistoryColumn } from "../components/historyColumn";
 
 import styles from "../styles/styles.module.css";
 
-const relationsDatabasePath = "../components/sampleRelationsData.csv";
-var csv = require('jquery-csv');
+const relationsDatabasePath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/main/src/components/sampleRelationsData.csv";
+
+function useRelationsData(csvPath){
+    const [dataAll, setData] = React.useState(null);
+    React.useEffect(() => {
+        csv(csvPath).then(data => {
+            data.forEach(d => {
+                d.index = d.ID - 1;
+            });
+            setData(data);
+        });
+    }, []);
+    return dataAll;
+}
 
 function GamePage(){
-    // var data = jquery.toObjects(relationsDatabasePath);
-    // var data = jquery.csv.get(csv, relationsDatabasePath);
-    console.log(jquery);
+    const relationsDatabase = useRelationsData(relationsDatabasePath);
+    // console.log(relationsDatabase);
 
     const page_width = 500; // use 500 for when the page is just half the screen
     const page_height = 776;
@@ -30,7 +42,6 @@ function GamePage(){
     const strokes_height = 20;
     const chars_width = strokes_width;
     const chars_height = page_height - menu_height - strokes_height;
-    console.log(page_width);
     
     return <Container>
         {/* Top row is the menu bar */}
@@ -42,7 +53,10 @@ function GamePage(){
                 id={"menu"} 
                 width={menu_width} 
                 height={menu_height}>
-
+                    <MenuBar 
+                    width={menu_width} 
+                    height={menu_height}
+                    />
                 </svg>
             </Col>
         </Row>  
@@ -56,7 +70,9 @@ function GamePage(){
             id={"map"} 
             width={history_width} 
             height={history_height}>
-                
+                <HistoryColumn
+                width={history_width} 
+                height={history_height}/>
             </svg>
         </Col>
 
@@ -71,7 +87,9 @@ function GamePage(){
                         id={"basicStrokes"} 
                         width={strokes_width} 
                         height={strokes_height}>
-
+                            <BasicStrokes
+                            width={strokes_width}
+                            height={strokes_height}/>
                         </svg>
                     </Col>
                 </Row> 
@@ -85,7 +103,11 @@ function GamePage(){
                         id={"characterArray"} 
                         width={chars_width} 
                         height={chars_height}>
-
+                            <CharacterArray 
+                            width={chars_width}
+                            height={chars_height}
+                            relationsDatabase={relationsDatabase}
+                            />
                         </svg>
                     </Col>
                 </Row> 

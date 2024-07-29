@@ -1,0 +1,18 @@
+.mainView {
+    background-color: lightgray;
+    width: 100vw;
+}
+
+.columnStyle {
+    margin: auto;
+}
+
+.charsStyle {
+    text-align: center;
+    /* margin-bottom: 5px; */
+    padding-bottom: 0px;
+}
+
+.charArrayStyle {
+    background-color: tan;
+}
