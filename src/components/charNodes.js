@@ -61,11 +61,12 @@ function StaticNodes(props){
 function DraggableNodes(props){
     const {data} = props;
 
+    var nodeRef = React.useRef({});
+
     if(data){
         return <g>
         {
           data.map( d => {
-            var nodeRef = React.useRef({});
             var controlledPosition = {x: 0, y: 0};
 
             var coords = determineCoordinates(d.index);
