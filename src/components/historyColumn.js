@@ -31,13 +31,17 @@ function appendEquation(width, height, component1, component2, relationsDatabase
 
     // otherwise, create a text box that includes this equation, and add the resulting character to the seenCharacters array
     seenCharacters.push(result);
-    const equation = <g key={"Equation-" + data_subset[0].ID}>
-        <text className={styles.historyEquationCellStyle} width={width} height={height}>
+    return <svg width={width} height={height} 
+    key={"Equation-" + data_subset[0].ID}
+    className={styles.historyEquationCellStyle}
+    >
+    {/* <g> */}
+        <text x={0} y={height/2} width={400} height={100}>
             {component1} + {component2} = {result}
         </text>
-    </g>
-
-    return equation;
+    {/* </g> */}
+        
+    </svg>;
 }
 
 function HistoryColumn(props){
@@ -53,7 +57,7 @@ function HistoryColumn(props){
         className={styles.historyColumnBoxStyle} style={{height: height, width: width, padding: '10px'}}
         >
 
-        {appendEquation(width-20, 100, "一", "内", relationsDatabase)}
+        {appendEquation(100, 40, "一", "内", relationsDatabase)}
 
         </div>
         
