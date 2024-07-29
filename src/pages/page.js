@@ -29,14 +29,14 @@ function useRelationsData(csvPath){
 
 function GamePage(){
     const relationsDatabase = useRelationsData(relationsDatabasePath);
-    // console.log(relationsDatabase);
+    console.log(relationsDatabase);
 
-    const page_width = 500; // use 500 for when the page is just half the screen
+    const page_width = 600; // use 600 for when the page is just half the screen
     const page_height = 776;
 
     const menu_width = page_width;
     const menu_height = 20;
-    const history_width = 150;
+    const history_width = 200;
     const history_height = page_height - menu_height;
     const strokes_width = page_width - history_width;
     const strokes_height = 20;
@@ -66,13 +66,15 @@ function GamePage(){
         <Col lg={3} >
             <h4>History</h4>
             <svg 
-            className={styles.mapStyle} 
+            className={styles.historyColumnStyle} 
             id={"map"} 
             width={history_width} 
             height={history_height}>
                 <HistoryColumn
                 width={history_width} 
-                height={history_height}/>
+                height={history_height}
+                relationsDatabase={relationsDatabase}
+                />
             </svg>
         </Col>
 
