@@ -2,9 +2,12 @@ import React from "react";
 import { min, max } from 'd3';
 import styles from "../styles/styles.module.css";
 
-var seenCharacters = [];
+import { seenCharacters } from "../pages/page";
 
-function appendEquation(width, height, component1, component2, relationsDatabase){
+function appendEquation(component1, component2, relationsDatabase){
+
+    const width = 100;
+    const height = 40;
     
     // filter the data for rows that take component 1 and component 2, in either order
     const data_subset = relationsDatabase.filter(equation => (equation.Component1 == component1 && equation.Component2 == component2) || (equation.Component1 == component2 && equation.Component2 == component1));
@@ -15,33 +18,35 @@ function appendEquation(width, height, component1, component2, relationsDatabase
         return null;
     }
 
-    // if there are multiple (there should not be but human error in the dataset...), send a different alert
-    if (data_subset.length >= 2){
-        alert("Too many equations.");
-        return null;
+    // since some pairs of components can generate more than one character, we first take the array of unique resulting characters
+    var unique = [];
+    for (const i in data_subset){
+        const result = data_subset[i].Result;
+
+        // for each resulting character, we also filter for those that we have not seen yet
+        if (!(result in unique) && !(result in seenCharacters)){
+            unique.push(result);
+            console.log(result, seenCharacters, result in seenCharacters);
+        }
     }
 
-    const result = data_subset[0].Result;
+    // then, for each character, create a text box that includes this equation, and add the resulting character to the seenCharacters array
+    return <g>
+        {
+            unique.map( result => {
+                seenCharacters.push(result);
 
-    // if the resulting character already has been made, send a different alert
-    if (result in seenCharacters){
-        alert(result + " already seen!");
-        return null;
-    }
-
-    // otherwise, create a text box that includes this equation, and add the resulting character to the seenCharacters array
-    seenCharacters.push(result);
-    return <svg width={width} height={height} 
-    key={"Equation-" + data_subset[0].ID}
-    className={styles.historyEquationCellStyle}
-    >
-    {/* <g> */}
-        <text x={0} y={height/2} width={400} height={100}>
-            {component1} + {component2} = {result}
-        </text>
-    {/* </g> */}
-        
-    </svg>;
+                return <svg width={width} height={height} 
+                key={"Equation-" + data_subset[0].ID}
+                className={styles.historyEquationCellStyle}
+                >
+                    <text x={0} y={height/2} width={width} height={height} pointerEvents={'none'}>
+                        {component1} + {component2} = {result}
+                    </text>
+                </svg>;
+            })
+        }
+    </g>
 }
 
 function HistoryColumn(props){
@@ -57,7 +62,9 @@ function HistoryColumn(props){
         className={styles.historyColumnBoxStyle} style={{height: height, width: width, padding: '10px'}}
         >
 
-        {appendEquation(100, 40, "一", "内", relationsDatabase)}
+        {/* {appendEquation("一", "内", relationsDatabase)}
+        {appendEquation("十", "一", relationsDatabase)}
+        {appendEquation("丨", "二", relationsDatabase)} */}
 
         </div>
         
@@ -68,4 +75,4 @@ function HistoryColumn(props){
     }
 }
 
-export { HistoryColumn }
+export { appendEquation, HistoryColumn }

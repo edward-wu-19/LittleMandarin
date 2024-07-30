@@ -3,6 +3,8 @@ import Draggable from 'react-draggable';
 import { min, max } from 'd3';
 import styles from "../styles/styles.module.css";
 
+import { appendEquation } from "./historyColumn";
+
 const radius = 14;
 const offsetX = radius / 2 + 1;
 const offsetY = radius / 2 - 1;
@@ -24,7 +26,7 @@ function determineCoordinates(index){
 }
 
 function StaticNodes(props){
-  const {data} = props;
+  const {data, selectedDraggableNode} = props;
 
   if(data){
       return <g>
@@ -45,7 +47,7 @@ function StaticNodes(props){
               />
 
               <text key={d.index+"-text-fixed"}
-              x={cx-offsetX} y={cy+offsetY}>
+              x={cx-offsetX} y={cy+offsetY} pointerEvents={'none'}>
                   {`${d.Result}`}
               </text>
 
@@ -58,8 +60,13 @@ function StaticNodes(props){
   }
 }
 
+function onMouseDown(x, selectedDraggableNode, setSelectedDraggableNode){
+  setSelectedDraggableNode(x);
+  console.log(x);
+}
+
 function DraggableNodes(props){
-    const {data} = props;
+    const {data, selectedDraggableNode, setSelectedDraggableNode} = props;
 
     var nodeRef = React.useRef({});
 
@@ -86,13 +93,16 @@ function DraggableNodes(props){
                   fill={"white"}
                   cx={cx}
                   cy={cy}
-                  opacity={0.5}
+                  opacity={0.8}
+                  onMouseOver={() => onMouseDown(d.Result, selectedDraggableNode, setSelectedDraggableNode)}
+                  onMouseUp={() => setSelectedDraggableNode(null)}
                 />
 
                 <text
                 key={d.index+"-text-drag"}
                 x={cx-offsetX} 
-                y={cy+offsetY}>
+                y={cy+offsetY}
+                pointerEvents={'none'}>
                     {`${d.Result}`}
                 </text>
                 </g>

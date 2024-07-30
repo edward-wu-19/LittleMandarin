@@ -12,7 +12,7 @@ import { HistoryColumn } from "../components/historyColumn";
 
 import styles from "../styles/styles.module.css";
 
-const relationsDatabasePath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/main/src/components/sampleRelationsData.csv";
+const relationsDatabasePath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/v0.2-Addition-%26-History/src/components/sampleRelationsData.csv";
 
 function useRelationsData(csvPath){
     const [dataAll, setData] = React.useState(null);
@@ -27,9 +27,35 @@ function useRelationsData(csvPath){
     return dataAll;
 }
 
+const startingCharactersPath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/v0.2-Addition-%26-History/src/components/sampleStartingCharacters.csv";
+
+var seenCharacters = [];
+var load_idx = 0;
+
+function loadStartingSet(csvPath){
+    const [dataAll, setData] = React.useState(null);
+
+    React.useEffect(() => {
+        csv(csvPath).then(data => {
+            data.forEach(d => {
+                if (!(d.Character in seenCharacters)){
+                    setData(data);
+                    seenCharacters.push(d.Character);
+                    d.index = load_idx;
+                    load_idx += 1;
+                    d.Result = d.Character;
+                }
+            });
+
+        });
+    }, [csvPath]);
+    return dataAll;
+}
+
 function GamePage(){
     const relationsDatabase = useRelationsData(relationsDatabasePath);
-    console.log(relationsDatabase);
+    const startingCharacters = loadStartingSet(startingCharactersPath);
+    console.log(startingCharacters);
 
     const page_width = 600; // use 600 for when the page is just half the screen
     const page_height = 776;
@@ -108,7 +134,7 @@ function GamePage(){
                             <CharacterArray 
                             width={chars_width}
                             height={chars_height}
-                            relationsDatabase={relationsDatabase}
+                            relationsDatabase={startingCharacters}
                             />
                         </svg>
                     </Col>
@@ -118,5 +144,7 @@ function GamePage(){
         </Row>
     </Container>
 }
+
+export { seenCharacters }
 
 export default GamePage
