@@ -31,10 +31,11 @@ function appendEquation(component1, component2, relationsDatabase){
     }
 
     // then, for each character, create a text box that includes this equation, and add the resulting character to the seenCharacters array
-    return <g>
+    document.getElementById('historyColumnBox').append(<g>
         {
             unique.map( result => {
                 seenCharacters.push(result);
+                console.log(result);
 
                 return <svg width={width} height={height} 
                 key={"Equation-" + data_subset[0].ID}
@@ -46,7 +47,7 @@ function appendEquation(component1, component2, relationsDatabase){
                 </svg>;
             })
         }
-    </g>
+    </g>);
 }
 
 function HistoryColumn(props){
@@ -58,7 +59,7 @@ function HistoryColumn(props){
         {/* we use a foreignObject tag to create a section that has a fixed shape, but we want to scroll through (vertically) */}
         <foreignObject width={width} height={height} xmlns="http://www.w3.org/1999/xhtml">
         
-        <div 
+        <div id={'historyColumnBox'}
         className={styles.historyColumnBoxStyle} style={{height: height, width: width, padding: '10px'}}
         >
 

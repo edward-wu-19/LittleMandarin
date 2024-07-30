@@ -26,7 +26,7 @@ function determineCoordinates(index){
 }
 
 function StaticNodes(props){
-  const {data, selectedDraggableNode} = props;
+  const {data, relationsDatabase, selectedDraggableCharacter} = props;
 
   if(data){
       return <g>
@@ -60,13 +60,22 @@ function StaticNodes(props){
   }
 }
 
-function onMouseDown(x, selectedDraggableNode, setSelectedDraggableNode){
-  setSelectedDraggableNode(x);
-  console.log(x);
+function onMouseDown(char, selectedDraggableCharacter, setSelectedDraggableCharacter){
+  setSelectedDraggableCharacter(char);
+  console.log(selectedDraggableCharacter);
+}
+
+function onMouseOver(char, selectedDraggableCharacter, setSelectedDraggableCharacter, relationsDatabase){
+  if (selectedDraggableCharacter){
+    console.log('hi');
+    appendEquation(selectedDraggableCharacter, char, relationsDatabase);
+  }
+
+  setSelectedDraggableCharacter(null);
 }
 
 function DraggableNodes(props){
-    const {data, selectedDraggableNode, setSelectedDraggableNode} = props;
+    const {data, relationsDatabase, selectedDraggableCharacter, setSelectedDraggableCharacter} = props;
 
     var nodeRef = React.useRef({});
 
@@ -94,8 +103,9 @@ function DraggableNodes(props){
                   cx={cx}
                   cy={cy}
                   opacity={0.8}
-                  onMouseOver={() => onMouseDown(d.Result, selectedDraggableNode, setSelectedDraggableNode)}
-                  onMouseUp={() => setSelectedDraggableNode(null)}
+                  onMouseDown={() => onMouseDown(d.Result, selectedDraggableCharacter, setSelectedDraggableCharacter)}
+                  onMouseUp={() => onMouseDown(null, selectedDraggableCharacter, setSelectedDraggableCharacter)}
+                  onMouseOver={() => onMouseOver(d.Result, selectedDraggableCharacter, setSelectedDraggableCharacter, relationsDatabase)}
                 />
 
                 <text

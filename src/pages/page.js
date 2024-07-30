@@ -134,7 +134,8 @@ function GamePage(){
                             <CharacterArray 
                             width={chars_width}
                             height={chars_height}
-                            relationsDatabase={startingCharacters}
+                            startingDatabase={startingCharacters}
+                            relationsDatabase={relationsDatabase}
                             />
                         </svg>
                     </Col>
