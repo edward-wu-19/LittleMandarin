@@ -26,7 +26,7 @@ function determineCoordinates(index){
 }
 
 function StaticNodes(props){
-  const {data, relationsDatabase, selectedDraggableCharacter} = props;
+  const {data, relationsDatabase, selectedDraggableCharacter, currentHoveredCharacter, setCurrentHoveredCharacter} = props;
 
   if(data){
       return <g>
@@ -44,10 +44,13 @@ function StaticNodes(props){
                 fill={"white"}
                 cx={cx}
                 cy={cy}
+                onMouseEnter={() => onMouseEnterStatic(d.Result, setCurrentHoveredCharacter)}
+                onMouseLeave={() => onMouseLeaveStatic(setCurrentHoveredCharacter)}
+                ondrop={() => console.log('drop')}
               />
 
               <text key={d.index+"-text-fixed"}
-              x={cx-offsetX} y={cy+offsetY} pointerEvents={'none'}>
+              x={cx-offsetX} y={cy+offsetY}>
                   {`${d.Result}`}
               </text>
 
@@ -60,24 +63,43 @@ function StaticNodes(props){
   }
 }
 
-function onMouseDown(char, selectedDraggableCharacter, setSelectedDraggableCharacter){
-  setSelectedDraggableCharacter(char);
-  console.log(selectedDraggableCharacter);
+function onMouseEnterStatic(char, setCurrentHoveredCharacter){
+  setCurrentHoveredCharacter(char);
+  console.log('hover ', char);
 }
 
-function onMouseOver(char, selectedDraggableCharacter, setSelectedDraggableCharacter, relationsDatabase){
-  if (selectedDraggableCharacter){
-    console.log('hi');
-    appendEquation(selectedDraggableCharacter, char, relationsDatabase);
+function onMouseLeaveStatic(setCurrentHoveredCharacter){
+  setCurrentHoveredCharacter(null);
+  console.log('leave');
+}
+
+function onMouseDown(char, setSelectedDraggableCharacter){
+  setSelectedDraggableCharacter(char);
+}
+
+function onMouseUp(relationsDatabase, selectedDraggableCharacter, setSelectedDraggableCharacter, currentHoveredCharacter, setCurrentHoveredCharacter){
+  // this function runs appendEquation ONLY if the mouse is currently hovered on a character and the mouse is let go, the latter of which we check by putting this in the mouse event onMouseUp
+  console.log(currentHoveredCharacter);
+  if (selectedDraggableCharacter & currentHoveredCharacter){
+    console.log('hello');
+    appendEquation(selectedDraggableCharacter, currentHoveredCharacter, relationsDatabase);
   }
 
+  // regardless of if an equation is created, both variables need to be reset
+  console.log('up');
   setSelectedDraggableCharacter(null);
+  setCurrentHoveredCharacter(null);
 }
 
 function DraggableNodes(props){
-    const {data, relationsDatabase, selectedDraggableCharacter, setSelectedDraggableCharacter} = props;
+    const {data, relationsDatabase, selectedDraggableCharacter, setSelectedDraggableCharacter, currentHoveredCharacter, setCurrentHoveredCharacter} = props;
 
     var nodeRef = React.useRef({});
+
+    // this conditional is to keep track of when to turn off the interactiveness of the draggable nodes. when a draggable node is being dragged, the program turns off all other draggable nodes so that only the static nodes are left. then if the draggable node is released while the mouse is on a static node, it will call appendEquation from the historyColumn component.
+    const getInteractive = (sel, char) => (sel != null & sel != char) ? 'none':'all';
+    const getInteractive2 = (sel, char) => (sel != null & sel != char) ? 0:1;
+    // nodes should turn off (interaction) if selectedDraggableCharacter is not null and it is not equal to the node's character
 
     if(data){
         return <g>
@@ -89,7 +111,8 @@ function DraggableNodes(props){
             var cx = coords[0];
             var cy = coords[1];
         
-            return <g key={d.index+"-group-drag"}>
+            return <g key={d.index+"-group-drag"}
+              pointerEvents={getInteractive(selectedDraggableCharacter, d.Result)}>
               <Draggable
               position={controlledPosition}
               nodeRef={nodeRef} // this line solves the findDOMNode warning
@@ -99,13 +122,14 @@ function DraggableNodes(props){
                   r={radius}
                   stroke={'black'}
                   strokeWidth={'2px'}
-                  fill={"white"}
+                  fill={"red"}
                   cx={cx}
                   cy={cy}
-                  opacity={0.8}
-                  onMouseDown={() => onMouseDown(d.Result, selectedDraggableCharacter, setSelectedDraggableCharacter)}
-                  onMouseUp={() => onMouseDown(null, selectedDraggableCharacter, setSelectedDraggableCharacter)}
-                  onMouseOver={() => onMouseOver(d.Result, selectedDraggableCharacter, setSelectedDraggableCharacter, relationsDatabase)}
+                  opacity={0.8*getInteractive2(selectedDraggableCharacter, d.Result)}
+                  // when the mouse is pressed down and the node gets dragged, the draggable node must be marked as the hovered node
+                  onMouseDown={() => onMouseDown(d.Result, setSelectedDraggableCharacter)}
+                  
+                  onMouseUp={() => onMouseUp(relationsDatabase, selectedDraggableCharacter, setSelectedDraggableCharacter, currentHoveredCharacter, setCurrentHoveredCharacter)}
                 />
 
                 <text
