@@ -36,14 +36,25 @@ function appendEquation(component1, component2, relationsDatabase){
         seenCharacters.push(result);
         console.log(result);
 
-        document.getElementById('historyColumnBox').append( <svg width={width} height={height} 
-        key={"Equation-" + data_subset[0].ID}
-        className={styles.historyEquationCellStyle}
-        >
-            <text x={0} y={height/2} width={width} height={height} pointerEvents={'none'}>
-                {component1} + {component2} = {result}
-            </text>
-        </svg>);
+        const history = document.getElementById('historyColumnBox')
+        
+        history.insertAdjacentHTML(
+            'beforeend',
+            `<p>
+                ${component1} + ${component2} = ${result}
+            </p>`
+        )
+        history.append( 
+        // <svg width={width} height={height} 
+        // key={"Equation-" + data_subset[0].ID}
+        // className={styles.historyEquationCellStyle}
+        // >
+        //     <text x={0} y={height/2} width={width} height={height} pointerEvents={'none'}>
+        //         {component1} + {component2} = {result}
+        //     </text>
+        // </svg>
+        
+        );
     })
 }
 
@@ -57,7 +68,7 @@ function HistoryColumn(props){
         <foreignObject width={width} height={height} xmlns="http://www.w3.org/1999/xhtml">
         
         <div id={'historyColumnBox'}
-        className={styles.historyColumnBoxStyle} style={{height: height, width: width, padding: '10px'}}
+        className={styles.historyColumnBoxStyle} style={{padding: '10px'}}
         >
 
         {/* {appendEquation("一", "内", relationsDatabase)}
