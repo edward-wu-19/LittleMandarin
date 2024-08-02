@@ -26,7 +26,7 @@ function determineCoordinates(index){
 }
 
 function StaticNodes(props){
-  const {data, relationsDatabase, selectedDraggableCharacter, currentHoveredCharacter, setCurrentHoveredCharacter} = props;
+  const {data, relationsDatabase, currentCharacter, setCurrentCharacter} = props;
 
   if(data){
       return <g>
@@ -36,7 +36,8 @@ function StaticNodes(props){
             var cx = coords[0];
             var cy = coords[1];
         
-            return <g key={d.index+"-group-fixed"}>
+            return <g key={d.index+"-group-fixed"}
+                onClick={() => onClick(d.Result, currentCharacter, setCurrentCharacter, relationsDatabase)}>
               <circle key={d.index+"-fixed"}
                 r={radius}
                 stroke={'black'}
@@ -44,9 +45,6 @@ function StaticNodes(props){
                 fill={"white"}
                 cx={cx}
                 cy={cy}
-                onMouseEnter={() => onMouseEnterStatic(d.Result, setCurrentHoveredCharacter)}
-                onMouseLeave={() => onMouseLeaveStatic(setCurrentHoveredCharacter)}
-                ondrop={() => console.log('drop')}
               />
 
               <text key={d.index+"-text-fixed"}
@@ -63,18 +61,19 @@ function StaticNodes(props){
   }
 }
 
-function onMouseEnterStatic(char, setCurrentHoveredCharacter){
-  setCurrentHoveredCharacter(char);
-  console.log('hover ', char);
-}
+function onClick(char, currentCharacter, setCurrentCharacter, relationsDatabase){
 
-function onMouseLeaveStatic(setCurrentHoveredCharacter){
-  setCurrentHoveredCharacter(null);
-  console.log('leave');
-}
-
-function onMouseDown(char, setSelectedDraggableCharacter){
-  setSelectedDraggableCharacter(char);
+  // if no character is currently selected, then set this character as the current character
+  if (!currentCharacter){
+    setCurrentCharacter(char);
+    // console.log('if' + char);
+  }
+  // otherwise, check if the currently selected character makes a pair with this character (potentially the same)
+  else{
+    appendEquation(currentCharacter, char, relationsDatabase);
+    setCurrentCharacter(null);
+    // console.log('else' + char);
+  }
 }
 
 function onMouseUp(relationsDatabase, selectedDraggableCharacter, setSelectedDraggableCharacter, currentHoveredCharacter, setCurrentHoveredCharacter){

@@ -7,15 +7,19 @@ import { StaticNodes, DraggableNodes } from "./charNodes";
 function CharacterArray(props){
     const {width, height, startingDatabase, relationsDatabase} = props;
 
-    const [selectedDraggableCharacter, setSelectedDraggableCharacter] = React.useState(null);
-    const [currentHoveredCharacter, setCurrentHoveredCharacter] = React.useState(null);
+    const [currentCharacter, setCurrentCharacter] = React.useState(null);
 
     return <g>
-        <rect className={styles.charArrayStyle} style={{fill:"tan", strokeWidth:"8", stroke:"brown"}} width={width} height={height} />
+        <rect className={styles.charArrayStyle} style={{fill:"tan", strokeWidth:"8", stroke:"brown"}} width={width} height={height} onClick={() => onClickArrayBackground(setCurrentCharacter)}/>
 
-        <StaticNodes data={startingDatabase} relationsDatabase={relationsDatabase} selectedDraggableCharacter={selectedDraggableCharacter}currentHoveredCharacter={currentHoveredCharacter} setCurrentHoveredCharacter={setCurrentHoveredCharacter} />
-        <DraggableNodes data={startingDatabase} relationsDatabase={relationsDatabase} selectedDraggableCharacter={selectedDraggableCharacter} setSelectedDraggableCharacter={setSelectedDraggableCharacter} currentHoveredCharacter={currentHoveredCharacter} setCurrentHoveredCharacter={setCurrentHoveredCharacter} />
+        <StaticNodes data={startingDatabase} relationsDatabase={relationsDatabase} currentCharacter={currentCharacter}setCurrentCharacter={setCurrentCharacter} />
+        {/* <DraggableNodes data={startingDatabase} relationsDatabase={relationsDatabase} selectedDraggableCharacter={selectedDraggableCharacter} setSelectedDraggableCharacter={setSelectedDraggableCharacter} currentHoveredCharacter={currentHoveredCharacter} setCurrentHoveredCharacter={setCurrentHoveredCharacter} /> */}
     </g>
+}
+
+function onClickArrayBackground(setCurrentCharacter){
+    setCurrentCharacter(null);
+    console.log('background');
 }
 
 export { CharacterArray }

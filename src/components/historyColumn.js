@@ -3,6 +3,7 @@ import { min, max } from 'd3';
 import styles from "../styles/styles.module.css";
 
 import { seenCharacters } from "../pages/page";
+import { SVG } from '@svgdotjs/svg.js'
 
 function appendEquation(component1, component2, relationsDatabase){
 
@@ -31,23 +32,19 @@ function appendEquation(component1, component2, relationsDatabase){
     }
 
     // then, for each character, create a text box that includes this equation, and add the resulting character to the seenCharacters array
-    document.getElementById('historyColumnBox').append(<g>
-        {
-            unique.map( result => {
-                seenCharacters.push(result);
-                console.log(result);
+    unique.map( result => {
+        seenCharacters.push(result);
+        console.log(result);
 
-                return <svg width={width} height={height} 
-                key={"Equation-" + data_subset[0].ID}
-                className={styles.historyEquationCellStyle}
-                >
-                    <text x={0} y={height/2} width={width} height={height} pointerEvents={'none'}>
-                        {component1} + {component2} = {result}
-                    </text>
-                </svg>;
-            })
-        }
-    </g>);
+        document.getElementById('historyColumnBox').append( <svg width={width} height={height} 
+        key={"Equation-" + data_subset[0].ID}
+        className={styles.historyEquationCellStyle}
+        >
+            <text x={0} y={height/2} width={width} height={height} pointerEvents={'none'}>
+                {component1} + {component2} = {result}
+            </text>
+        </svg>);
+    })
 }
 
 function HistoryColumn(props){

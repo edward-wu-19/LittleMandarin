@@ -1,4 +1,4 @@
-// Remember to npm install bootstrap, react-boostrap, react, d3 in local project directory!!
+// Remember to npm install bootstrap, react-boostrap, react, d3, @svgdotjs/svg.js in local project directory!!
 
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.css';
