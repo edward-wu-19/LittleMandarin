@@ -26,7 +26,7 @@ function determineCoordinates(index){
 }
 
 function StaticNodes(props){
-  const {data, relationsDatabase, currentCharacter, setCurrentCharacter} = props;
+  const {data, relationsDatabase, currentCharacter, setCurrentCharacter, seenCharacters} = props;
 
   if(data){
       return <g>
@@ -37,7 +37,7 @@ function StaticNodes(props){
             var cy = coords[1];
         
             return <g key={d.index+"-group-fixed"}
-                onClick={() => onClick(d.Result, currentCharacter, setCurrentCharacter, relationsDatabase)}>
+                onClick={() => onClick(d.Result, currentCharacter, setCurrentCharacter, relationsDatabase, seenCharacters)}>
               <circle key={d.index+"-fixed"}
                 r={radius}
                 stroke={'black'}
@@ -61,7 +61,7 @@ function StaticNodes(props){
   }
 }
 
-function onClick(char, currentCharacter, setCurrentCharacter, relationsDatabase){
+function onClick(char, currentCharacter, setCurrentCharacter, relationsDatabase, seenCharacters){
 
   // if no character is currently selected, then set this character as the current character
   if (!currentCharacter){
@@ -70,7 +70,7 @@ function onClick(char, currentCharacter, setCurrentCharacter, relationsDatabase)
   }
   // otherwise, check if the currently selected character makes a pair with this character (potentially the same)
   else{
-    appendEquation(currentCharacter, char, relationsDatabase);
+    appendEquation(currentCharacter, char, relationsDatabase, seenCharacters);
     setCurrentCharacter(null);
     // console.log('else' + char);
   }

@@ -2,10 +2,9 @@ import React from "react";
 import { min, max } from 'd3';
 import styles from "../styles/styles.module.css";
 
-import { seenCharacters } from "../pages/page";
 import { SVG } from '@svgdotjs/svg.js'
 
-function appendEquation(component1, component2, relationsDatabase){
+function appendEquation(component1, component2, relationsDatabase, seenCharacters){
 
     const width = 100;
     const height = 40;
@@ -40,7 +39,11 @@ function appendEquation(component1, component2, relationsDatabase){
         
         history.insertAdjacentHTML(
             'beforeend',
-            `<p>
+            `<p style="border: 1px solid black;
+                    padding: 5px;
+                    background-color: rgba(255,255,255,.6);
+                    margin: 8px;
+                    text-align: center;">
                 ${component1} + ${component2} = ${result}
             </p>`
         )
@@ -59,7 +62,7 @@ function appendEquation(component1, component2, relationsDatabase){
 }
 
 function HistoryColumn(props){
-    const {width, height, relationsDatabase} = props;
+    const {width, height, relationsDatabase, seenCharacters} = props;
 
     if(relationsDatabase){
         

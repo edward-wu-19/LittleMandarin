@@ -29,7 +29,7 @@ function useRelationsData(csvPath){
 
 const startingCharactersPath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/v0.2-Addition-%26-History/src/components/sampleStartingCharacters.csv";
 
-var seenCharacters = [];
+let seenCharacters = [];
 var load_idx = 0;
 
 function loadStartingSet(csvPath){
@@ -100,6 +100,7 @@ function GamePage(){
                 width={history_width} 
                 height={history_height}
                 relationsDatabase={relationsDatabase}
+                seenCharacters={seenCharacters}
                 />
             </svg>
         </Col>
@@ -136,6 +137,7 @@ function GamePage(){
                             height={chars_height}
                             startingDatabase={startingCharacters}
                             relationsDatabase={relationsDatabase}
+                            seenCharacters={seenCharacters}
                             />
                         </svg>
                     </Col>
