@@ -33,16 +33,14 @@ let seenCharacters = [];
 var load_idx = 0;
 
 function loadStartingSet(csvPath, availableCharacters){
-    React.useEffect(() => {
-        csv(csvPath).then(data => {
-            data.forEach(d => {
-                if (!(availableCharacters.includes(d.Character))){
-                    addCharacter(d.Character, availableCharacters)
-                }
-            });
-
+    csv(csvPath).then(data => {
+        data.forEach(d => {
+            if (!(availableCharacters.includes(d.Character))){
+                addCharacter(d.Character, availableCharacters)
+            }
         });
-    }, [csvPath, availableCharacters]);
+
+    });
 }
 
 function addCharacter(char, availableCharacters){
