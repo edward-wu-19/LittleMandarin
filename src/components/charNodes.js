@@ -26,39 +26,43 @@ function determineCoordinates(index){
 }
 
 function StaticNodes(props){
-  const {data, relationsDatabase, currentCharacter, setCurrentCharacter, seenCharacters} = props;
+  const {relationsDatabase, currentCharacter, setCurrentCharacter, availableCharacters} = props;
 
-  if(data){
-      return <g>
-      {
-          data.map( d => {
-            var coords = determineCoordinates(d.index);
-            var cx = coords[0];
-            var cy = coords[1];
-        
-            return <g key={d.index+"-group-fixed"}
-                onClick={() => onClick(d.Result, currentCharacter, setCurrentCharacter, relationsDatabase, seenCharacters)}>
-              <circle key={d.index+"-fixed"}
-                r={radius}
-                stroke={'black'}
-                strokeWidth={'2px'}
-                fill={"white"}
-                cx={cx}
-                cy={cy}
-              />
+  var index = 0;
 
-              <text key={d.index+"-text-fixed"}
-              x={cx-offsetX} y={cy+offsetY}>
-                  {`${d.Result}`}
-              </text>
+  return <g>
+  {
+    availableCharacters.map( character => {
+        var coords = determineCoordinates(index);
+        var cx = coords[0];
+        var cy = coords[1];
 
-            </g>
-            }
-          )}
-          </g>
-  } else {
-      return <g></g>
-  }
+        console.log(character, cx, cy);
+
+        // increment index to generate the next node's coordinates
+        index += 1;
+    
+        return <g key={character+"-group"}
+            // onClick={() => onClick(d.Result, currentCharacter, setCurrentCharacter, relationsDatabase, seenCharacters)}
+            >
+          <circle key={character+"-fixed"}
+            r={radius}
+            stroke={'black'}
+            strokeWidth={'2px'}
+            fill={"white"}
+            cx={cx}
+            cy={cy}
+          />
+
+          <text key={character+"-text"}
+          x={cx-offsetX} y={cy+offsetY}>
+              {`${character}`}
+          </text>
+
+        </g>
+        }
+      )}
+  </g>;
 }
 
 function onClick(char, currentCharacter, setCurrentCharacter, relationsDatabase, seenCharacters){
@@ -90,63 +94,4 @@ function onMouseUp(relationsDatabase, selectedDraggableCharacter, setSelectedDra
   setCurrentHoveredCharacter(null);
 }
 
-function DraggableNodes(props){
-    const {data, relationsDatabase, selectedDraggableCharacter, setSelectedDraggableCharacter, currentHoveredCharacter, setCurrentHoveredCharacter} = props;
-
-    var nodeRef = React.useRef({});
-
-    // this conditional is to keep track of when to turn off the interactiveness of the draggable nodes. when a draggable node is being dragged, the program turns off all other draggable nodes so that only the static nodes are left. then if the draggable node is released while the mouse is on a static node, it will call appendEquation from the historyColumn component.
-    const getInteractive = (sel, char) => (sel != null & sel != char) ? 'none':'all';
-    const getInteractive2 = (sel, char) => (sel != null & sel != char) ? 0:1;
-    // nodes should turn off (interaction) if selectedDraggableCharacter is not null and it is not equal to the node's character
-
-    if(data){
-        return <g>
-        {
-          data.map( d => {
-            var controlledPosition = {x: 0, y: 0};
-
-            var coords = determineCoordinates(d.index);
-            var cx = coords[0];
-            var cy = coords[1];
-        
-            return <g key={d.index+"-group-drag"}
-              pointerEvents={getInteractive(selectedDraggableCharacter, d.Result)}>
-              <Draggable
-              position={controlledPosition}
-              nodeRef={nodeRef} // this line solves the findDOMNode warning
-              >
-                <g ref={nodeRef}>
-                <circle key={d.index+"-drag"}
-                  r={radius}
-                  stroke={'black'}
-                  strokeWidth={'2px'}
-                  fill={"red"}
-                  cx={cx}
-                  cy={cy}
-                  opacity={0.8*getInteractive2(selectedDraggableCharacter, d.Result)}
-                  // when the mouse is pressed down and the node gets dragged, the draggable node must be marked as the hovered node
-                  onMouseDown={() => onMouseDown(d.Result, setSelectedDraggableCharacter)}
-                  
-                  onMouseUp={() => onMouseUp(relationsDatabase, selectedDraggableCharacter, setSelectedDraggableCharacter, currentHoveredCharacter, setCurrentHoveredCharacter)}
-                />
-
-                <text
-                key={d.index+"-text-drag"}
-                x={cx-offsetX} 
-                y={cy+offsetY}
-                pointerEvents={'none'}>
-                    {`${d.Result}`}
-                </text>
-                </g>
-              </Draggable>
-            </g>
-              }
-          )}
-        </g>
-    } else {
-        return <g></g>
-    }
-}
-
-export { StaticNodes, DraggableNodes }
+export { StaticNodes }

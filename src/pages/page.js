@@ -32,30 +32,27 @@ const startingCharactersPath = "https://raw.githubusercontent.com/edward-wu-19/L
 let seenCharacters = [];
 var load_idx = 0;
 
-function loadStartingSet(csvPath){
-    const [dataAll, setData] = React.useState(null);
-
+function loadStartingSet(csvPath, availableCharacters){
     React.useEffect(() => {
         csv(csvPath).then(data => {
             data.forEach(d => {
-                if (!(d.Character in seenCharacters)){
-                    setData(data);
-                    seenCharacters.push(d.Character);
-                    d.index = load_idx;
-                    load_idx += 1;
-                    d.Result = d.Character;
+                if (!(availableCharacters.includes(d.Character))){
+                    addCharacter(d.Character, availableCharacters)
                 }
             });
 
         });
     }, [csvPath]);
-    return dataAll;
 }
+
+function addCharacter(char, availableCharacters){
+    availableCharacters.push(char);
+}
+
+var availableCharacters = [];
 
 function GamePage(){
     const relationsDatabase = useRelationsData(relationsDatabasePath);
-    const startingCharacters = loadStartingSet(startingCharactersPath);
-    console.log(startingCharacters);
 
     const page_width = 600; // use 600 for when the page is just half the screen
     const page_height = 776;
@@ -68,6 +65,10 @@ function GamePage(){
     const strokes_height = 20;
     const chars_width = strokes_width;
     const chars_height = page_height - menu_height - strokes_height;
+
+    // load starting characters
+    loadStartingSet(startingCharactersPath, availableCharacters);
+    console.log(availableCharacters);
     
     return <Container>
         {/* Top row is the menu bar */}
@@ -100,7 +101,7 @@ function GamePage(){
                 width={history_width} 
                 height={history_height}
                 relationsDatabase={relationsDatabase}
-                seenCharacters={seenCharacters}
+                availableCharacters={availableCharacters}
                 />
             </svg>
         </Col>
@@ -135,9 +136,8 @@ function GamePage(){
                             <CharacterArray 
                             width={chars_width}
                             height={chars_height}
-                            startingDatabase={startingCharacters}
                             relationsDatabase={relationsDatabase}
-                            seenCharacters={seenCharacters}
+                            availableCharacters={availableCharacters}
                             />
                         </svg>
                     </Col>
