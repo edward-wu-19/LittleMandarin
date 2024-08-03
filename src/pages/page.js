@@ -29,9 +29,6 @@ function useRelationsData(csvPath){
 
 const startingCharactersPath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/main/src/components/sampleStartingCharacters.csv";
 
-let seenCharacters = [];
-var load_idx = 0;
-
 function loadStartingSet(csvPath, availableCharacters){
     csv(csvPath).then(data => {
         data.forEach(d => {
@@ -145,7 +142,5 @@ function GamePage(){
         </Row>
     </Container>
 }
-
-export { seenCharacters }
 
 export default GamePage

@@ -18,7 +18,6 @@ function CharacterArray(props){
 
 function onClickArrayBackground(setCurrentCharacter){
     setCurrentCharacter(null);
-    // console.log('background');
 }
 
 export { CharacterArray }

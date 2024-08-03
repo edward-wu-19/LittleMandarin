@@ -1,5 +1,4 @@
 import React from "react";
-import Draggable from 'react-draggable';
 import { min, max } from 'd3';
 import styles from "../styles/styles.module.css";
 
