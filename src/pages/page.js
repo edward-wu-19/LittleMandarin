@@ -12,7 +12,7 @@ import { HistoryColumn } from "../components/historyColumn";
 
 import styles from "../styles/styles.module.css";
 
-const relationsDatabasePath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/v0.2-Addition-%26-History/src/components/sampleRelationsData.csv";
+const relationsDatabasePath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/main/src/components/sampleRelationsData.csv";
 
 function useRelationsData(csvPath){
     const [dataAll, setData] = React.useState(null);
@@ -27,7 +27,7 @@ function useRelationsData(csvPath){
     return dataAll;
 }
 
-const startingCharactersPath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/v0.2-Addition-%26-History/src/components/sampleStartingCharacters.csv";
+const startingCharactersPath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/main/src/components/sampleStartingCharacters.csv";
 
 let seenCharacters = [];
 var load_idx = 0;
