@@ -30,6 +30,8 @@ function StaticNodes(props){
 
   var index = 0;
 
+  availableCharacters.sort();
+
   return <g>
   {
     availableCharacters.map( character => {
