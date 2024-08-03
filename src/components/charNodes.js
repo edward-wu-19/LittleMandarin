@@ -37,13 +37,11 @@ function StaticNodes(props){
         var cx = coords[0];
         var cy = coords[1];
 
-        console.log(character, cx, cy);
-
         // increment index to generate the next node's coordinates
         index += 1;
     
         return <g key={character+"-group"}
-            // onClick={() => onClick(d.Result, currentCharacter, setCurrentCharacter, relationsDatabase, seenCharacters)}
+            onClick={() => onClick(character, currentCharacter, setCurrentCharacter, relationsDatabase, availableCharacters)}
             >
           <circle key={character+"-fixed"}
             r={radius}
@@ -65,33 +63,19 @@ function StaticNodes(props){
   </g>;
 }
 
-function onClick(char, currentCharacter, setCurrentCharacter, relationsDatabase, seenCharacters){
+function onClick(character, currentCharacter, setCurrentCharacter, relationsDatabase, availableCharacters){
 
   // if no character is currently selected, then set this character as the current character
   if (!currentCharacter){
-    setCurrentCharacter(char);
-    // console.log('if' + char);
+    setCurrentCharacter(character);
+    console.log('if' + character);
   }
   // otherwise, check if the currently selected character makes a pair with this character (potentially the same)
   else{
-    appendEquation(currentCharacter, char, relationsDatabase, seenCharacters);
+    appendEquation(currentCharacter, character, relationsDatabase, availableCharacters);
     setCurrentCharacter(null);
-    // console.log('else' + char);
+    console.log('else' + character);
   }
-}
-
-function onMouseUp(relationsDatabase, selectedDraggableCharacter, setSelectedDraggableCharacter, currentHoveredCharacter, setCurrentHoveredCharacter){
-  // this function runs appendEquation ONLY if the mouse is currently hovered on a character and the mouse is let go, the latter of which we check by putting this in the mouse event onMouseUp
-  console.log(currentHoveredCharacter);
-  if (selectedDraggableCharacter & currentHoveredCharacter){
-    console.log('hello');
-    appendEquation(selectedDraggableCharacter, currentHoveredCharacter, relationsDatabase);
-  }
-
-  // regardless of if an equation is created, both variables need to be reset
-  console.log('up');
-  setSelectedDraggableCharacter(null);
-  setCurrentHoveredCharacter(null);
 }
 
 export { StaticNodes }
