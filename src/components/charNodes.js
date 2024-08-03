@@ -3,6 +3,8 @@ import Draggable from 'react-draggable';
 import { min, max } from 'd3';
 import styles from "../styles/styles.module.css";
 
+import { appendEquation } from "./historyColumn";
+
 const radius = 14;
 const offsetX = radius / 2 + 1;
 const offsetY = radius / 2 - 1;
@@ -24,86 +26,58 @@ function determineCoordinates(index){
 }
 
 function StaticNodes(props){
-  const {data} = props;
+  const {relationsDatabase, currentCharacter, setCurrentCharacter, availableCharacters} = props;
 
-  if(data){
-      return <g>
-      {
-          data.map( d => {
-            var coords = determineCoordinates(d.index);
-            var cx = coords[0];
-            var cy = coords[1];
-        
-            return <g key={d.index+"-group-fixed"}>
-              <circle key={d.index+"-fixed"}
-                r={radius}
-                stroke={'black'}
-                strokeWidth={'2px'}
-                fill={"white"}
-                cx={cx}
-                cy={cy}
-              />
+  var index = 0;
 
-              <text key={d.index+"-text-fixed"}
-              x={cx-offsetX} y={cy+offsetY}>
-                  {`${d.Result}`}
-              </text>
+  availableCharacters.sort();
 
-            </g>
-            }
-          )}
-          </g>
-  } else {
-      return <g></g>
+  return <g>
+  {
+    availableCharacters.map( character => {
+        var coords = determineCoordinates(index);
+        var cx = coords[0];
+        var cy = coords[1];
+
+        // increment index to generate the next node's coordinates
+        index += 1;
+    
+        return <g key={character+"-group"}
+            onClick={() => onClick(character, currentCharacter, setCurrentCharacter, relationsDatabase, availableCharacters)}
+            >
+          <circle key={character+"-fixed"}
+            r={radius}
+            stroke={'black'}
+            strokeWidth={'2px'}
+            fill={"white"}
+            cx={cx}
+            cy={cy}
+          />
+
+          <text key={character+"-text"}
+          x={cx-offsetX} y={cy+offsetY}>
+              {`${character}`}
+          </text>
+
+        </g>
+        }
+      )}
+  </g>;
+}
+
+function onClick(character, currentCharacter, setCurrentCharacter, relationsDatabase, availableCharacters){
+
+  // if no character is currently selected, then set this character as the current character
+  if (!currentCharacter){
+    setCurrentCharacter(character);
+    console.log('if' + character);
+  }
+  // otherwise, check if the currently selected character makes a pair with this character (potentially the same)
+  else{
+    appendEquation(currentCharacter, character, relationsDatabase, availableCharacters);
+    setCurrentCharacter(null);
+    console.log('else' + character);
   }
 }
 
-function DraggableNodes(props){
-    const {data} = props;
-
-    var nodeRef = React.useRef({});
-
-    if(data){
-        return <g>
-        {
-          data.map( d => {
-            var controlledPosition = {x: 0, y: 0};
-
-            var coords = determineCoordinates(d.index);
-            var cx = coords[0];
-            var cy = coords[1];
-        
-            return <g key={d.index+"-group-drag"}>
-              <Draggable
-              position={controlledPosition}
-              nodeRef={nodeRef} // this line solves the findDOMNode warning
-              >
-                <g ref={nodeRef}>
-                <circle key={d.index+"-drag"}
-                  r={radius}
-                  stroke={'black'}
-                  strokeWidth={'2px'}
-                  fill={"white"}
-                  cx={cx}
-                  cy={cy}
-                  opacity={0.5}
-                />
-
-                <text
-                key={d.index+"-text-drag"}
-                x={cx-offsetX} 
-                y={cy+offsetY}>
-                    {`${d.Result}`}
-                </text>
-                </g>
-              </Draggable>
-            </g>
-              }
-          )}
-        </g>
-    } else {
-        return <g></g>
-    }
-}
-
-export { StaticNodes, DraggableNodes }
+export { StaticNodes }
