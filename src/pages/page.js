@@ -42,7 +42,7 @@ function loadStartingSet(csvPath, availableCharacters){
             });
 
         });
-    }, [csvPath]);
+    }, [csvPath, availableCharacters]);
 }
 
 function addCharacter(char, availableCharacters){
