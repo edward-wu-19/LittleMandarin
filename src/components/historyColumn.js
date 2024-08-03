@@ -6,9 +6,6 @@ import { SVG } from '@svgdotjs/svg.js'
 
 function appendEquation(component1, component2, relationsDatabase, seenCharacters){
 
-    const width = 100;
-    const height = 40;
-    
     // filter the data for rows that take component 1 and component 2, in either order
     const data_subset = relationsDatabase.filter(equation => (equation.Component1 == component1 && equation.Component2 == component2) || (equation.Component1 == component2 && equation.Component2 == component1));
 
@@ -24,9 +21,8 @@ function appendEquation(component1, component2, relationsDatabase, seenCharacter
         const result = data_subset[i].Result;
 
         // for each resulting character, we also filter for those that we have not seen yet
-        if (!(result in unique) && !(result in seenCharacters)){
+        if (!(unique.includes(result)) && !(seenCharacters.includes(result))){
             unique.push(result);
-            console.log(result, seenCharacters, result in seenCharacters);
         }
     }
 
@@ -35,7 +31,7 @@ function appendEquation(component1, component2, relationsDatabase, seenCharacter
         seenCharacters.push(result);
         console.log(result);
 
-        const history = document.getElementById('historyColumnBox')
+        const history = document.getElementById('historyColumnBox');
         
         history.insertAdjacentHTML(
             'beforeend',
@@ -46,17 +42,6 @@ function appendEquation(component1, component2, relationsDatabase, seenCharacter
                     text-align: center;">
                 ${component1} + ${component2} = ${result}
             </p>`
-        )
-        history.append( 
-        // <svg width={width} height={height} 
-        // key={"Equation-" + data_subset[0].ID}
-        // className={styles.historyEquationCellStyle}
-        // >
-        //     <text x={0} y={height/2} width={width} height={height} pointerEvents={'none'}>
-        //         {component1} + {component2} = {result}
-        //     </text>
-        // </svg>
-        
         );
     })
 }
