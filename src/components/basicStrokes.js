@@ -6,13 +6,9 @@ function BasicStrokes(props){
     const {width, height} = props;
 
 
-    if(false){
-       
-    } else {
-        return <g>
-            <rect width={width} height={height} />
-        </g>
-    }
+    return <g>
+        <rect width={width} height={height} />
+    </g>
 }
 
 export { BasicStrokes }

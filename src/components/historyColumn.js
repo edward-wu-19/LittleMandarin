@@ -24,12 +24,11 @@ function appendEquation(component1, component2, relationsDatabase, availableChar
         }
     }
 
+    var history = document.getElementById('historyColumnBox');
+
     // then, for each character, create an equation, and add the resulting character to the availableCharacters array
     unique.map( result => {
         availableCharacters.push(result);
-        console.log(result);
-
-        const history = document.getElementById('historyColumnBox');
         
         history.insertAdjacentHTML(
             'beforeend',
@@ -45,13 +44,11 @@ function appendEquation(component1, component2, relationsDatabase, availableChar
 }
 
 function HistoryColumn(props){
-    const {width, height, relationsDatabase} = props;
+    const {width, height} = props;
 
-    if(relationsDatabase){
-        
-        return <g>
-        {/* we use a foreignObject tag to create a section that has a fixed shape, but we want to scroll through (vertically) */}
-        <foreignObject width={width} height={height} xmlns="http://www.w3.org/1999/xhtml">
+    // we use a foreignObject tag to create a section that has a fixed shape, but we want to scroll through (vertically), which will be implemented in the future
+    return <g>
+        <foreignObject width={width} height={height} xmlns="http://www.w3.org/1999/html">
         
         <div id={'historyColumnBox'}
         className={styles.historyColumnBoxStyle} style={{padding: '10px'}}
@@ -60,10 +57,7 @@ function HistoryColumn(props){
         </div>
         
         </foreignObject>
-        </g>;
-    } else {
-        return <g></g>;
-    }
+    </g>;
 }
 
 export { appendEquation, HistoryColumn }

@@ -9,11 +9,15 @@ function CharacterArray(props){
 
     const [currentCharacter, setCurrentCharacter] = React.useState(null);
 
-    return <g>
-        <rect className={styles.charArrayStyle} style={{fill:"tan", strokeWidth:"8", stroke:"brown"}} width={width} height={height} onClick={() => onClickArrayBackground(setCurrentCharacter)}/>
+    return <React.Fragment>
+        <rect 
+        className={styles.charArrayStyle} 
+        style={{fill:"tan", strokeWidth:"8", stroke:"brown"}} 
+        width={width} height={height} 
+        onClick={() => onClickArrayBackground(setCurrentCharacter)}/>
 
-        <StaticNodes relationsDatabase={relationsDatabase} currentCharacter={currentCharacter}setCurrentCharacter={setCurrentCharacter} availableCharacters={availableCharacters}/>
-    </g>
+        <StaticNodes relationsDatabase={relationsDatabase} currentCharacter={currentCharacter} setCurrentCharacter={setCurrentCharacter} availableCharacters={availableCharacters}/>
+    </React.Fragment>
 }
 
 function onClickArrayBackground(setCurrentCharacter){

@@ -31,7 +31,7 @@ function StaticNodes(props){
 
   availableCharacters.sort();
 
-  return <g>
+  return <g id={'inner'}>
   {
     availableCharacters.map( character => {
         var coords = determineCoordinates(index);
@@ -69,13 +69,11 @@ function onClick(character, currentCharacter, setCurrentCharacter, relationsData
   // if no character is currently selected, then set this character as the current character
   if (!currentCharacter){
     setCurrentCharacter(character);
-    console.log('if' + character);
   }
   // otherwise, check if the currently selected character makes a pair with this character (potentially the same)
   else{
     appendEquation(currentCharacter, character, relationsDatabase, availableCharacters);
     setCurrentCharacter(null);
-    console.log('else' + character);
   }
 }
 
