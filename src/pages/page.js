@@ -33,27 +33,22 @@ function loadStartingSet(csvPath, availableCharacters){
     csv(csvPath).then(data => {
         data.forEach(d => {
             if (!(availableCharacters.includes(d.Character))){
-                addCharacter(d.Character, availableCharacters)
+                availableCharacters.push(d.Character);
             }
         });
-
     });
 }
 
-function addCharacter(char, availableCharacters){
-    availableCharacters.push(char);
-}
-
-var availableCharacters = [];
-
 function GamePage(){
+    const [availableCharacters, setAvailableCharacters] = React.useState([]);
+
     const relationsDatabase = useRelationsData(relationsDatabasePath);
 
     const page_width = 600; // use 600 for when the page is just half the screen
     const page_height = 776;
 
     const menu_width = page_width;
-    const menu_height = 20;
+    const menu_height = 30;
     const history_width = 200;
     const history_height = page_height - menu_height;
     const strokes_width = page_width - history_width;
@@ -62,8 +57,9 @@ function GamePage(){
     const chars_height = page_height - menu_height - strokes_height;
 
     // load starting characters
-    loadStartingSet(startingCharactersPath, availableCharacters);
-    console.log(availableCharacters);
+    if(availableCharacters.length == 0){
+        loadStartingSet(startingCharactersPath, availableCharacters);
+    }
     
     return <Container>
         {/* Top row is the menu bar */}
@@ -78,6 +74,8 @@ function GamePage(){
                     <MenuBar 
                     width={menu_width} 
                     height={menu_height}
+                    availableCharacters={availableCharacters}
+                    setAvailableCharacters={setAvailableCharacters}
                     />
                 </svg>
             </Col>
@@ -95,8 +93,6 @@ function GamePage(){
                 <HistoryColumn
                 width={history_width} 
                 height={history_height}
-                relationsDatabase={relationsDatabase}
-                availableCharacters={availableCharacters}
                 />
             </svg>
         </Col>
@@ -123,6 +119,7 @@ function GamePage(){
                 <Row>
                     <Col lg={10}>
                         <h4>Character Array</h4>
+                        
                         <svg 
                         className={styles.charsStyle} 
                         id={"characterArray"} 
