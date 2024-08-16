@@ -12,7 +12,8 @@ import { HistoryColumn } from "../components/historyColumn";
 
 import styles from "../styles/styles.module.css";
 
-const relationsDatabasePath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/main/src/components/sampleRelationsData.csv";
+// const relationsDatabasePath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/main/src/components/sampleRelationsData.csv";
+const relationsDatabasePath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/v0.4-css/src/components/sampleRelationsData.csv";
 
 function useRelationsData(csvPath){
     const [dataAll, setData] = React.useState(null);
@@ -27,7 +28,8 @@ function useRelationsData(csvPath){
     return dataAll;
 }
 
-const startingCharactersPath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/main/src/components/sampleStartingCharacters.csv";
+// const startingCharactersPath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/main/src/components/sampleStartingCharacters.csv";
+const startingCharactersPath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/v0.4-css/src/components/sampleStartingCharacters.csv";
 
 function loadStartingSet(csvPath, availableCharacters){
     csv(csvPath).then(data => {
@@ -43,7 +45,7 @@ function GamePage(){
     const [availableCharacters, setAvailableCharacters] = React.useState([]);
 
     const relationsDatabase = useRelationsData(relationsDatabasePath);
-
+    
     const page_width = 600; // use 600 for when the page is just half the screen
     const page_height = 776;
 

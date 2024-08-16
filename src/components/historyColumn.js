@@ -51,7 +51,7 @@ function HistoryColumn(props){
         <foreignObject width={width} height={height} xmlns="http://www.w3.org/1999/html">
         
         <div id={'historyColumnBox'}
-        className={styles.historyColumnBoxStyle} style={{padding: '10px'}}
+        className={styles.historyColumnBoxStyle} style={{padding: '10px', overflowY: 'scroll', height: `${height}px`}}
         >
 
         </div>
