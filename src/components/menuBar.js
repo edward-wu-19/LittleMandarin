@@ -39,7 +39,8 @@ function MenuBar(props){
     const {width, height, availableCharacters, setAvailableCharacters} = props;
 
     return <g>
-        <rect width={width} height={height} />
+        <rect width={width} height={height} 
+        style={{fill:"tan", strokeWidth:"4", stroke:"black"}}/>
 
         <foreignObject width={width} height={height} xmlns="http://www.w3.org/1999/html">
         

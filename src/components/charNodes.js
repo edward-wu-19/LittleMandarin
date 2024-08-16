@@ -4,10 +4,6 @@ import styles from "../styles/styles.module.css";
 
 import { appendEquation } from "./historyColumn";
 
-const radius = 14;
-const offsetX = radius / 2 + 1;
-const offsetY = radius / 2 - 1;
-
 function determineCoordinates(index){
     // used to put the characters into a grid like array
     const margin = 60;
@@ -27,6 +23,14 @@ function determineCoordinates(index){
 function StaticNodes(props){
   const {relationsDatabase, currentCharacter, setCurrentCharacter, availableCharacters} = props;
 
+  const getRadius = character => character === currentCharacter ? 20 : 14;
+  const getColor = character => character === currentCharacter ? "pink" : "white";
+  const getStrokeWidth = character => character === currentCharacter ? "4px" : "2px";
+
+  const getNodeTextClassName = character => character === currentCharacter ? styles.nodeTextSelectedClassStyle : styles.nodeTextUnselectedClassStyle;
+  const getTextOffsetX = character => character === currentCharacter ? -11 : -8;
+  
+
   var index = 0;
 
   availableCharacters.sort();
@@ -42,19 +46,20 @@ function StaticNodes(props){
         index += 1;
     
         return <g key={character+"-group"}
+            transform={`translate(${cx},${cy})`}
             onClick={() => onClick(character, currentCharacter, setCurrentCharacter, relationsDatabase, availableCharacters)}
             >
           <circle key={character+"-fixed"}
-            r={radius}
+            r={`${getRadius(character)}`}
             stroke={'black'}
-            strokeWidth={'2px'}
-            fill={"white"}
-            cx={cx}
-            cy={cy}
+            strokeWidth={`${getStrokeWidth(character)}`}
+            fill={`${getColor(character)}`}
+            cx={0} cy={0}
           />
 
           <text key={character+"-text"}
-          x={cx-offsetX} y={cy+offsetY}>
+          x={`${getTextOffsetX(character)}`} y={6}
+          className={`${getNodeTextClassName(character)}`}>
               {`${character}`}
           </text>
 

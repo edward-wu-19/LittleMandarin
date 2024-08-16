@@ -12,7 +12,7 @@ function CharacterArray(props){
     return <React.Fragment>
         <rect 
         className={styles.charArrayStyle} 
-        style={{fill:"tan", strokeWidth:"8", stroke:"brown"}} 
+        style={{fill:"tan", strokeWidth:"4", stroke:"black"}} 
         width={width} height={height} 
         onClick={() => onClickArrayBackground(setCurrentCharacter)}/>
 
