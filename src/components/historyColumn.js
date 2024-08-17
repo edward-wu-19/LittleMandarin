@@ -12,6 +12,7 @@ function appendEquation(component1, component2, relationsDatabase, availableChar
     // if no rows exist, then return null and paint those two nodes red
     if (data_subset.length == 0){
         // alert("No equation exists.");
+        console.log(component1 == "一");
         fadeColorOut(component1, "red");
         fadeColorOut(component2, "red");
         return null;

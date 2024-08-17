@@ -58,12 +58,9 @@ function StaticNodes(props){
   const getNodeTextClassName = character => character === currentCharacter ? styles.nodeTextSelectedClassStyle : styles.nodeTextUnselectedClassStyle;
   const getTextOffsetX = character => character === currentCharacter ? -11 : -8;
   
-
   var index = 0;
 
-  availableCharacters.sort();
-
-  return <g id={'inner'}>
+  return <g>
   {
     availableCharacters.map( character => {
         var coords = determineCoordinates(index);

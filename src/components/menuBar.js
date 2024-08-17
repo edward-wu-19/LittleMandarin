@@ -17,18 +17,16 @@ function downloadChars(characters) {
     document.body.removeChild(element);
 }
 
-function uploadChars(setAvailableCharacters) {
-    var fileToLoad = document.getElementById("fileToLoad").files[0];
+function uploadChars(setAvailableCharacters, file) {
     var textFromFileLoaded;
     var fileReader = new FileReader();
+    fileReader.readAsText(file);
     fileReader.onload = function(fileLoadedEvent){
         textFromFileLoaded = fileLoadedEvent.target.result;
 
         // split by comma
-        setAvailableCharacters(textFromFileLoaded.split(','));
+        setAvailableCharacters(textFromFileLoaded.split(',').sort());
     };
-
-    fileReader.readAsText(fileToLoad, "UTF-8");
 }
 
 function MenuBar(props){
@@ -40,7 +38,8 @@ function MenuBar(props){
     // Function to handle file selection
     const handleFileSelect = () => {
         if (fileInputRef.current) {
-            fileInputRef.current.click(); // Trigger the file input
+            fileInputRef.current.click(); 
+            // Trigger the file input
         }
     };
 
