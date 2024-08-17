@@ -27,3 +27,30 @@
     font-size: medium;
     user-select: none;
 }
+
+.fade_red {
+    animation: fadeRed 3s forwards;
+    transition-timing-function: ease-in-out;
+}
+@keyframes fadeRed {
+    0% { fill: red; }
+    100% { fill: white; }
+}
+
+.fade_yellow {
+    animation: fadeYellow 3s forwards;
+    transition-timing-function: ease-in-out;
+}
+@keyframes fadeYellow {
+    0% { fill: yellow; }
+    100% { fill: white; }
+}
+
+.fade_green {
+    animation: fadeGreen 3s forwards;
+    transition-timing-function: ease-in-out;
+}
+@keyframes fadeGreen {
+    0% { fill: limegreen; }
+    100% { fill: white; }
+}

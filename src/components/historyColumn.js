@@ -2,14 +2,18 @@ import React from "react";
 import { min, max } from 'd3';
 import styles from "../styles/styles.module.css";
 
+import { fadeColorOut } from "./charNodes";
+
 function appendEquation(component1, component2, relationsDatabase, availableCharacters){
 
     // filter the data for rows that take component 1 and component 2, in either order
     const data_subset = relationsDatabase.filter(equation => (equation.Component1 == component1 && equation.Component2 == component2) || (equation.Component1 == component2 && equation.Component2 == component1));
 
-    // if no rows exist, then return null and send an alert
+    // if no rows exist, then return null and paint those two nodes red
     if (data_subset.length == 0){
-        alert("No equation exists.");
+        // alert("No equation exists.");
+        fadeColorOut(component1, "red");
+        fadeColorOut(component2, "red");
         return null;
     }
 
@@ -23,6 +27,10 @@ function appendEquation(component1, component2, relationsDatabase, availableChar
             unique.push(result);
         }
     }
+
+    // otherwise, at least one character can be created, so shine the two component characters green and the new characters yellow
+    fadeColorOut(component1, "green");
+    fadeColorOut(component2, "green");
 
     var history = document.getElementById('historyColumnBox');
 
@@ -40,6 +48,10 @@ function appendEquation(component1, component2, relationsDatabase, availableChar
                 ${component1} + ${component2} = ${result}
             </p>`
         );
+
+        setTimeout(function() {
+            fadeColorOut(result, 'yellow');
+        }, 1);
     })
 }
 

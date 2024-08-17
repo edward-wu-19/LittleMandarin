@@ -20,6 +20,34 @@ function determineCoordinates(index){
     return [x, y];
 }
 
+function fadeColorOut(character, color){
+  var node = document.getElementById(character+"-circle");
+
+  var fadestyle = null;
+
+  switch (color) {
+    case 'red':
+      fadestyle = styles.fade_red;
+      break;
+    case 'yellow':
+      fadestyle = styles.fade_yellow;
+      break;
+    case 'green':
+      fadestyle = styles.fade_green;
+      break;
+    default:
+      fadestyle = null;
+      break;
+  }
+  
+  node.classList.toggle(fadestyle);
+
+  // Use a timeout to reset the color back to blue after 1 second
+  setTimeout(function() {
+      node.classList.remove(fadestyle);
+  }, 3000); // Match the duration of the transition
+}
+
 function StaticNodes(props){
   const {relationsDatabase, currentCharacter, setCurrentCharacter, availableCharacters} = props;
 
@@ -49,7 +77,8 @@ function StaticNodes(props){
             transform={`translate(${cx},${cy})`}
             onClick={() => onClick(character, currentCharacter, setCurrentCharacter, relationsDatabase, availableCharacters)}
             >
-          <circle key={character+"-fixed"}
+          <circle key={character+"-circle"}
+            id={character+"-circle"}
             r={`${getRadius(character)}`}
             stroke={'black'}
             strokeWidth={`${getStrokeWidth(character)}`}
@@ -71,6 +100,11 @@ function StaticNodes(props){
 
 function onClick(character, currentCharacter, setCurrentCharacter, relationsDatabase, availableCharacters){
 
+  // remove color from any potential fade
+  var node = document.getElementById(character+"-circle");
+  node.classList.remove(styles.fade_red, styles.fade_yellow, styles.fade_green);
+
+
   // if no character is currently selected, then set this character as the current character
   if (!currentCharacter){
     setCurrentCharacter(character);
@@ -82,4 +116,4 @@ function onClick(character, currentCharacter, setCurrentCharacter, relationsData
   }
 }
 
-export { StaticNodes }
+export { StaticNodes, fadeColorOut }
