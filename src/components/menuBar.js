@@ -17,37 +17,51 @@ function downloadChars(characters) {
     document.body.removeChild(element);
 }
 
-function uploadChars(availableCharacters, setAvailableCharacters) {
-    var fileToLoad = document.getElementById("fileToLoad").files[0];
+function uploadChars(setAvailableCharacters, file) {
     var textFromFileLoaded;
     var fileReader = new FileReader();
+    fileReader.readAsText(file, "UTF-8");
     fileReader.onload = function(fileLoadedEvent){
         textFromFileLoaded = fileLoadedEvent.target.result;
 
         // split by comma
-        setAvailableCharacters(textFromFileLoaded.split(','));
-
-        console.log(availableCharacters);
+        setAvailableCharacters(textFromFileLoaded.split(',').sort());
     };
-
-    fileReader.readAsText(fileToLoad, "UTF-8");
-
-    console.log('done');
 }
 
 function MenuBar(props){
     const {width, height, availableCharacters, setAvailableCharacters} = props;
 
+     // Reference to the hidden file input
+    const fileInputRef = React.useRef(null);
+
+    // Function to handle file selection
+    const handleFileSelect = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click(); 
+            // Trigger the file input
+        }
+    };
+
+    const handleFileUpload = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          // Call uploadChars with the file
+          uploadChars(setAvailableCharacters, file);
+        }
+      };
+
     return <g>
-        <rect width={width} height={height} />
+        <rect width={width} height={height} 
+        style={{fill:"tan", strokeWidth:"4", stroke:"black"}}/>
 
         <foreignObject width={width} height={height} xmlns="http://www.w3.org/1999/html">
         
         <input type="button" id="button_download" value="Download" onClick={() => {downloadChars(availableCharacters)}} />
 
-        <input type="file" id="fileToLoad"/>
+        <input ref={fileInputRef} type='file' id='fileToLoad' style={{display:'none'}} onChange={handleFileUpload} />
 
-        <button onClick={() => {uploadChars(availableCharacters, setAvailableCharacters)}}>Load Selected File</button>
+        <button id="file_upload" onClick={() => {handleFileSelect()}}>Load Selected File</button>
         
         </foreignObject>
     </g>

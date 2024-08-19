@@ -4,10 +4,6 @@ import styles from "../styles/styles.module.css";
 
 import { appendEquation } from "./historyColumn";
 
-const radius = 14;
-const offsetX = radius / 2 + 1;
-const offsetY = radius / 2 - 1;
-
 function determineCoordinates(index){
     // used to put the characters into a grid like array
     const margin = 60;
@@ -24,14 +20,47 @@ function determineCoordinates(index){
     return [x, y];
 }
 
+function fadeColorOut(character, color){
+  var node = document.getElementById(character+"-circle");
+
+  var fadestyle = null;
+
+  switch (color) {
+    case 'red':
+      fadestyle = styles.fade_red;
+      break;
+    case 'yellow':
+      fadestyle = styles.fade_yellow;
+      break;
+    case 'green':
+      fadestyle = styles.fade_green;
+      break;
+    default:
+      fadestyle = null;
+      break;
+  }
+  
+  node.classList.toggle(fadestyle);
+
+  // Use a timeout to reset the color back to blue after 1 second
+  setTimeout(function() {
+      node.classList.remove(fadestyle);
+  }, 3000); // Match the duration of the transition
+}
+
 function StaticNodes(props){
   const {relationsDatabase, currentCharacter, setCurrentCharacter, availableCharacters} = props;
 
+  const getRadius = character => character === currentCharacter ? 20 : 14;
+  const getColor = character => character === currentCharacter ? "pink" : "white";
+  const getStrokeWidth = character => character === currentCharacter ? "4px" : "2px";
+
+  const getNodeTextClassName = character => character === currentCharacter ? styles.nodeTextSelectedClassStyle : styles.nodeTextUnselectedClassStyle;
+  const getTextOffsetX = character => character === currentCharacter ? -11 : -8;
+  
   var index = 0;
 
-  availableCharacters.sort();
-
-  return <g id={'inner'}>
+  return <g>
   {
     availableCharacters.map( character => {
         var coords = determineCoordinates(index);
@@ -42,19 +71,21 @@ function StaticNodes(props){
         index += 1;
     
         return <g key={character+"-group"}
+            transform={`translate(${cx},${cy})`}
             onClick={() => onClick(character, currentCharacter, setCurrentCharacter, relationsDatabase, availableCharacters)}
             >
-          <circle key={character+"-fixed"}
-            r={radius}
+          <circle key={character+"-circle"}
+            id={character+"-circle"}
+            r={`${getRadius(character)}`}
             stroke={'black'}
-            strokeWidth={'2px'}
-            fill={"white"}
-            cx={cx}
-            cy={cy}
+            strokeWidth={`${getStrokeWidth(character)}`}
+            fill={`${getColor(character)}`}
+            cx={0} cy={0}
           />
 
           <text key={character+"-text"}
-          x={cx-offsetX} y={cy+offsetY}>
+          x={`${getTextOffsetX(character)}`} y={6}
+          className={`${getNodeTextClassName(character)}`}>
               {`${character}`}
           </text>
 
@@ -65,6 +96,11 @@ function StaticNodes(props){
 }
 
 function onClick(character, currentCharacter, setCurrentCharacter, relationsDatabase, availableCharacters){
+
+  // remove color from any potential fade
+  var node = document.getElementById(character+"-circle");
+  node.classList.remove(styles.fade_red, styles.fade_yellow, styles.fade_green);
+
 
   // if no character is currently selected, then set this character as the current character
   if (!currentCharacter){
@@ -77,4 +113,4 @@ function onClick(character, currentCharacter, setCurrentCharacter, relationsData
   }
 }
 
-export { StaticNodes }
+export { StaticNodes, fadeColorOut }
