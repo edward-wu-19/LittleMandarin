@@ -20,7 +20,7 @@ function downloadChars(characters) {
 function uploadChars(setAvailableCharacters, file) {
     var textFromFileLoaded;
     var fileReader = new FileReader();
-    fileReader.readAsText(file);
+    fileReader.readAsText(file, "UTF-8");
     fileReader.onload = function(fileLoadedEvent){
         textFromFileLoaded = fileLoadedEvent.target.result;
 
