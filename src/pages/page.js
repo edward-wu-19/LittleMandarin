@@ -9,11 +9,11 @@ import { CharacterArray } from "../components/characterArray";
 import { BasicStrokes } from "../components/basicStrokes";
 import { MenuBar } from "../components/menuBar";
 import { HistoryColumn } from "../components/historyColumn";
+import { GoalBox } from "../components/goalBox";
 
 import styles from "../styles/styles.module.css";
 
-// const relationsDatabasePath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/main/src/components/sampleRelationsData.csv";
-const relationsDatabasePath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/v0.4-css/src/components/sampleRelationsData.csv";
+const relationsDatabasePath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/main/src/components/sampleRelationsData.csv";
 
 function useRelationsData(csvPath){
     const [dataAll, setData] = React.useState(null);
@@ -28,8 +28,7 @@ function useRelationsData(csvPath){
     return dataAll;
 }
 
-// const startingCharactersPath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/main/src/components/sampleStartingCharacters.csv";
-const startingCharactersPath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/v0.4-css/src/components/sampleStartingCharacters.csv";
+const startingCharactersPath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/main/src/components/sampleStartingCharacters.csv";
 
 function loadStartingSet(csvPath, availableCharacters){
     csv(csvPath).then(data => {
@@ -47,16 +46,19 @@ function GamePage(){
     const relationsDatabase = useRelationsData(relationsDatabasePath);
     
     const page_width = 600; // use 600 for when the page is just half the screen
-    const page_height = 776;
+    const page_height = 900;
 
-    const menu_width = page_width;
-    const menu_height = 30;
-    const history_width = 200;
+    const menu_width = 200;
+    const menu_height = 60;
+    const history_width = menu_width;
     const history_height = page_height - menu_height;
-    const strokes_width = page_width - history_width;
-    const strokes_height = 20;
-    const chars_width = strokes_width;
-    const chars_height = page_height - menu_height - strokes_height;
+
+    const goal_width = page_width - menu_width;
+    const goal_height = 30;
+    const strokes_width = goal_width;
+    const strokes_height = 40;
+    const chars_width = goal_width;
+    const chars_height = page_height - menu_height - strokes_height - 5;
 
     // load starting characters
     if(availableCharacters.length == 0){
@@ -64,9 +66,11 @@ function GamePage(){
     }
     
     return <Container>
-        {/* Top row is the menu bar */}
+        {/* On the left side, we have the menu bar on top */}
         <Row className={"justify-content-md-left"}>
-            <Col lg={10} >
+        <Col lg={3} >
+            <Row>
+            <Col>
                 <h4 className={styles.h1Style}>Menu Bar</h4> 
                 <svg 
                 className={styles.menuStyle} 
@@ -81,27 +85,45 @@ function GamePage(){
                     />
                 </svg>
             </Col>
-        </Row>  
+            </Row>
 
-        {/* Then on the left we have the history */}
-        <Row className={"justify-content-md-left"}>
-        <Col lg={3} >
-            <h4>History</h4>
-            <svg 
-            className={styles.historyColumnStyle} 
-            id={"map"} 
-            width={history_width} 
-            height={history_height}>
-                <HistoryColumn
+            {/* And under that, we have the history column */}
+            <Row className={"justify-content-md-left"}>
+            <Col>
+                <h4>History</h4>
+                <svg 
+                className={styles.historyColumnStyle} 
+                id={"historyColumn"} 
                 width={history_width} 
-                height={history_height}
-                />
-            </svg>
+                height={history_height}>
+                    <HistoryColumn
+                    width={history_width} 
+                    height={history_height}
+                    />
+                </svg>
+            </Col>
+            </Row>
         </Col>
 
         <Col>
             <Container>
-                {/* On the right side, we have the basic strokes on top ... */}
+                {/* On the right side, we have the current goal displayed on top ... */}
+                <Row>
+                    <Col lg={10}>
+                        <h4>Current Goal</h4>
+                        <svg 
+                        className={styles.goalBoxStyle} 
+                        id={"currentGoal"} 
+                        width={goal_width} 
+                        height={goal_height}>
+                            <GoalBox
+                            width={goal_width}
+                            height={goal_height}/>
+                        </svg>
+                    </Col>
+                </Row>
+
+                {/* then we have the basic strokes underneath */}
                 <Row>
                     <Col lg={10}>
                         <h4>Basic Strokes</h4>

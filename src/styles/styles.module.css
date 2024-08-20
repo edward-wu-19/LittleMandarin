@@ -12,6 +12,14 @@
     padding-bottom: 0px;
 }
 
+.goalBoxStyle {
+    background-color: tan;
+}
+
+.goalBoxTextStyle {
+    font-weight: none;
+}
+
 .historyColumnStyle {
     background-color: tan;
     border: 2px solid black;

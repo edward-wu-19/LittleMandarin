@@ -61,7 +61,7 @@ function MenuBar(props){
 
         <input ref={fileInputRef} type='file' id='fileToLoad' style={{display:'none'}} onChange={handleFileUpload} />
 
-        <button id="file_upload" onClick={() => {handleFileSelect()}}>Load Selected File</button>
+        <button id="file_upload" onClick={() => {handleFileSelect()}} style={{overflow:"hidden"}}>Load Selected File</button>
         
         </foreignObject>
     </g>
