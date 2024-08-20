@@ -62,7 +62,7 @@ function GamePage(){
     const goal_width = page_width - menu_width;
     const goal_height = 30;
     const strokes_width = goal_width;
-    const strokes_height = 80;
+    const strokes_height = 60;
     const chars_width = goal_width;
     const chars_height = page_height - menu_height - strokes_height - 5;
 

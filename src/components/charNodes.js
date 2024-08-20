@@ -4,11 +4,12 @@ import styles from "../styles/styles.module.css";
 
 import { appendEquation } from "./historyColumn";
 
-function determineCoordinates(index){
+function determineCoordinates(characterArrayWidth, index){
     // used to put the characters into a grid like array
-    const margin = 60;
-    const sep = 50;
-    const elements_per_row = 6;
+    const margin = 40;
+    const elements_per_row = 7;
+
+    const sep = (characterArrayWidth - 2 * margin) / (elements_per_row - 1);
 
     // everything, including rows and columns, is zero-indexed
     const row_number = Math.floor(index / elements_per_row);
@@ -18,22 +19,6 @@ function determineCoordinates(index){
     const y = margin + row_number * sep;
 
     return [x, y];
-}
-
-function determineCoordinatesStrokes(index){
-  // used to put the characters into a grid like array
-  const margin = 60;
-  const sep = 50;
-  const elements_per_row = 7;
-
-  // everything, including rows and columns, is zero-indexed
-  const row_number = Math.floor(index / elements_per_row);
-  const column_number = index % elements_per_row;
-  
-  const x = margin + column_number * sep;
-  const y = margin + row_number * sep;
-
-  return [x, y];
 }
 
 function fadeColorOut(character, color){
@@ -112,7 +97,7 @@ function StrokeNodes(props){
 }
 
 function StaticNodes(props){
-  const {relationsDatabase, currentCharacter, setCurrentCharacter, availableCharacters} = props;
+  const {characterArrayWidth, relationsDatabase, currentCharacter, setCurrentCharacter, availableCharacters} = props;
 
   const getRadius = character => character === currentCharacter ? 20 : 14;
   const getColor = character => character === currentCharacter ? "pink" : "white";
@@ -126,7 +111,7 @@ function StaticNodes(props){
   return <g>
   {
     availableCharacters.map( character => {
-        var coords = determineCoordinates(index);
+        var coords = determineCoordinates(characterArrayWidth, index);
         var cx = coords[0];
         var cy = coords[1];
 

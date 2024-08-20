@@ -9,7 +9,7 @@ function GoalBox(props){
     return <g>
         <rect className={styles.goalBoxStyle} width={width} height={height} style={{fill:"tan", strokeWidth:"4", stroke:"black"}}/>
 
-        <text x={10} y={20} className={styles.goalBoxTextStyle}>一二三四五六七八九十</text>
+        <text x={width/2} y={20} textAnchor="middle" className={styles.goalBoxTextStyle}>上  下  左  右</text>
     </g>
 }
 

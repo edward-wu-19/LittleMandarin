@@ -14,7 +14,7 @@ function CharacterArray(props){
         width={width} height={height} 
         onClick={() => onClickArrayBackground(setCurrentCharacter)}/>
 
-        <StaticNodes relationsDatabase={relationsDatabase} currentCharacter={currentCharacter} setCurrentCharacter={setCurrentCharacter} availableCharacters={availableCharacters}/>
+        <StaticNodes characterArrayWidth={width} relationsDatabase={relationsDatabase} currentCharacter={currentCharacter} setCurrentCharacter={setCurrentCharacter} availableCharacters={availableCharacters}/>
     </React.Fragment>
 }
 
