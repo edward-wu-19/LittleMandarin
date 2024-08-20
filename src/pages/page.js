@@ -28,22 +28,28 @@ function useRelationsData(csvPath){
     return dataAll;
 }
 
-const startingCharactersPath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/main/src/components/sampleStartingCharacters.csv";
-
-function loadStartingSet(csvPath, availableCharacters){
+function loadStrokeList(csvPath, strokeList){
     csv(csvPath).then(data => {
         data.forEach(d => {
-            if (!(availableCharacters.includes(d.Character))){
-                availableCharacters.push(d.Character);
+            if (!(strokeList.includes(d.Stroke))){
+                strokeList.push(d.Stroke);
             }
         });
     });
+    return;
 }
 
+const strokeListPath = "https://raw.githubusercontent.com/edward-wu-19/LittleMandarin/v0.5---goals/src/components/basicStrokeSet.csv";
+
 function GamePage(){
-    const [availableCharacters, setAvailableCharacters] = React.useState([]);
+    const [availableCharacters, setAvailableCharacters] = React.useState(["一"]);
+    const [strokeList, setStrokeList] = React.useState([]);
 
     const relationsDatabase = useRelationsData(relationsDatabasePath);
+
+    if(strokeList.length == 0){
+        loadStrokeList(strokeListPath, strokeList);
+    }
     
     const page_width = 600; // use 600 for when the page is just half the screen
     const page_height = 900;
@@ -56,14 +62,11 @@ function GamePage(){
     const goal_width = page_width - menu_width;
     const goal_height = 30;
     const strokes_width = goal_width;
-    const strokes_height = 40;
+    const strokes_height = 80;
     const chars_width = goal_width;
     const chars_height = page_height - menu_height - strokes_height - 5;
 
-    // load starting characters
-    if(availableCharacters.length == 0){
-        loadStartingSet(startingCharactersPath, availableCharacters);
-    }
+    const [currentCharacter, setCurrentCharacter] = React.useState(null);
     
     return <Container>
         {/* On the left side, we have the menu bar on top */}
@@ -134,7 +137,12 @@ function GamePage(){
                         height={strokes_height}>
                             <BasicStrokes
                             width={strokes_width}
-                            height={strokes_height}/>
+                            height={strokes_height}relationsDatabase={relationsDatabase}
+                            strokeList={strokeList}
+                            currentCharacter={currentCharacter}
+                            setCurrentCharacter={setCurrentCharacter}
+                            availableCharacters={availableCharacters}
+                            />
                         </svg>
                     </Col>
                 </Row> 
@@ -154,6 +162,8 @@ function GamePage(){
                             height={chars_height}
                             relationsDatabase={relationsDatabase}
                             availableCharacters={availableCharacters}
+                            currentCharacter={currentCharacter}
+                            setCurrentCharacter={setCurrentCharacter}
                             />
                         </svg>
                     </Col>

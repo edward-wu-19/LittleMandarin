@@ -5,9 +5,7 @@ import styles from "../styles/styles.module.css";
 import { StaticNodes } from "./charNodes";
 
 function CharacterArray(props){
-    const {width, height, relationsDatabase, availableCharacters} = props;
-
-    const [currentCharacter, setCurrentCharacter] = React.useState(null);
+    const {width, height, relationsDatabase, availableCharacters, currentCharacter, setCurrentCharacter} = props;
 
     return <React.Fragment>
         <rect 
